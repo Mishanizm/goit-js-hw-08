@@ -3,11 +3,8 @@ import SimpleLightbox from 'simplelightbox';
 
 import 'simplelightbox/dist/simple-lightbox.min.css';
 // Add imports above this line
-import { galleryItems } from './gallery-items';
+import { galleryItems } from './gallery-items.js';
 // Change code below this line
-
-console.log(galleryItems);
-
 
 const galleryContainer = document.querySelector('.gallery');
 
@@ -31,16 +28,8 @@ function createGalleryMarkup(items) {
 
 galleryContainer.innerHTML = createGalleryMarkup(galleryItems);
 
-const lightbox = new SimpleLightbox('.gallery__item a', {
+new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
+  captionDelay: 250,
   captionPosition: 'bottom',
-});
-
-galleryContainer.addEventListener('click', (e) => {
-  e.preventDefault();
-  const { target } = e;
-
-  if (target.classList.contains('gallery__image')) {
-    lightbox.open();
-  }
 });
