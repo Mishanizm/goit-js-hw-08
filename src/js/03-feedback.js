@@ -1,44 +1,48 @@
-
 import throttle from 'lodash.throttle';
 
-const form = document.querySelector('.feedback-form');
-const emailInput = form.querySelector('input[name="email"]');
-const messageTextarea = form.querySelector('textarea[name="message"]');
+const feedbackForm = document.querySelector('.feedback-form');
+const emailInput = feedbackForm.querySelector('input[name="email"]');
+const messageInput = feedbackForm.querySelector('textarea[name="message"]');
 
-const localStorageKey = 'feedback-form-state';
-
-function saveFormDataToLocalStorage() {
-    const formData = {
-        email: emailInput.value,
-        message: messageTextarea.value,
-    };
-    localStorage.setItem(localStorageKey, JSON.stringify(formData));
+function saveFormData() {
+  const formData = {
+    email: emailInput.value,
+    message: messageInput.value,
+  };
+  localStorage.setItem('feedback-form-state', JSON.stringify(formData));
 }
 
-function loadFormDataFromLocalStorage() {
-    const savedData = localStorage.getItem(localStorageKey);
-    if (savedData) {
-        const formData = JSON.parse(savedData);
-        emailInput.value = formData.email;
-        messageTextarea.value = formData.message;
-    }
+function loadFormData() {
+  const savedData = localStorage.getItem('feedback-form-state');
+  if (savedData) {
+    const formData = JSON.parse(savedData);
+    emailInput.value = formData.email;
+    messageInput.value = formData.message;
+  }
 }
 
-const throttledSaveToLocalStorage = throttle(saveFormDataToLocalStorage, 500);
 
-form.addEventListener('input', throttledSaveToLocalStorage);
+emailInput.addEventListener('input', throttle(saveFormData, 500));
+messageInput.addEventListener('input', throttle(saveFormData, 500));
 
-loadFormDataFromLocalStorage();
 
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const savedData = localStorage.getItem(localStorageKey);
-    if (savedData) {
-        const formData = JSON.parse(savedData);
-        console.log('Form data submitted:', formData);
+window.addEventListener('load', loadFormData);
 
-        localStorage.removeItem(localStorageKey);
-        emailInput.value = '';
-        messageTextarea.value = '';
-    }
+
+feedbackForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const feedbackData = {
+    email: emailInput.value,
+    message: messageInput.value,
+  };
+
+  if (!feedbackData.email || !feedbackData.message) {
+    alert('Please complete both fields before submitting the form.');
+    return;
+  }
+
+  console.log(feedbackData);
+
+  localStorage.removeItem('feedback-form-state');
 });
