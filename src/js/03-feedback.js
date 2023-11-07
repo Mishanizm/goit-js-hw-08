@@ -21,13 +21,10 @@ function loadFormData() {
   }
 }
 
-
 emailInput.addEventListener('input', throttle(saveFormData, 500));
 messageInput.addEventListener('input', throttle(saveFormData, 500));
 
-
 window.addEventListener('load', loadFormData);
-
 
 feedbackForm.addEventListener('submit', (e) => {
   e.preventDefault();
@@ -43,6 +40,9 @@ feedbackForm.addEventListener('submit', (e) => {
   }
 
   console.log(feedbackData);
+
+  emailInput.value = '';
+  messageInput.value = '';
 
   localStorage.removeItem('feedback-form-state');
 });
